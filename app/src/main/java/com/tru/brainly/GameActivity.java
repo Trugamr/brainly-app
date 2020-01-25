@@ -41,9 +41,6 @@ public class GameActivity extends AppCompatActivity {
         optionTwo.setAlpha(1f);
         optionThree.setAlpha(1f);
         optionFour.setAlpha(1f);
-        scoreTextView.setAlpha(0f);
-        timerTextView.setAlpha(0f);
-        questionTextView.setAlpha(0f);
         scoreTextView.animate().setDuration(500).alpha(1f);
         timerTextView.animate().setDuration(500).alpha(1f);
         questionTextView.animate().setDuration(500).alpha(1f);
@@ -58,7 +55,7 @@ public class GameActivity extends AppCompatActivity {
         Animations.slideUpAnim(optionFour, 200f, 0.8f);
 
         Animations.slideDownAnim(overlayScreen);
-        overlayScreen.animate().setDuration(500).alpha(0f);
+//        overlayScreen.animate().setDuration(500).alpha(0f);
         game.startGame();
     }
 
@@ -90,6 +87,10 @@ public class GameActivity extends AppCompatActivity {
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
 
         game = new Game(optionButtons, textViews, gameScreens, startButton);
+
+        scoreTextView.setAlpha(0f);
+        timerTextView.setAlpha(0f);
+        questionTextView.setAlpha(0f);
 
         // animations
         brainlyText.setScaleX(0f);
@@ -162,7 +163,7 @@ class Game {
         Log.i("XD", "GAME_ENDED");
         // animations
         Animations.slideUpAnim(overlayScreen);
-        overlayScreen.animate().setDuration(500).alpha(1f);
+//        overlayScreen.animate().setDuration(500).alpha(1f);
         scoreTextView.animate().setDuration(300).alpha(0f);
         timerTextView.animate().setDuration(300).alpha(0f);
         questionTextView.animate().setDuration(300).alpha(0f);
@@ -315,7 +316,7 @@ class Animations {
     }
 
     public static void slideUpAnim(View v) {
-        slideUpAnim(v, 100f, 0.9f);
+        slideUpAnim(v, 60f, 0.9f);
     }
 
     public static void slideUpAnim(View v, float stiffness, float bounciness) {
