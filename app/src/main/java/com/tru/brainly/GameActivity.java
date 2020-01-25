@@ -202,8 +202,7 @@ class Question {
         int secondNumber = random.nextInt(max - min + 1) + min;
         String equation = "1 + 1";
         int result = 2;
-        // bound set to 3 , disabled division for now due to floats
-        int symbol = random.nextInt(3);
+        int symbol = random.nextInt(4);
         switch(symbol) {
             case 0:
                 equation = String.format("%d + %d", firstNumber, secondNumber);
@@ -218,7 +217,12 @@ class Question {
                 result = firstNumber * secondNumber;
                 break;
             case 3:
-                equation = String.format("%d ÷ %d", firstNumber, secondNumber);
+                firstNumber = firstNumber - (firstNumber % secondNumber);
+                if(firstNumber == 0) {
+                    firstNumber = secondNumber * (random.nextInt(8) + 2);
+                    Log.i("XD", "JEERO");
+                }
+                    equation = String.format("%d ÷ %d", firstNumber, secondNumber);
                 result = firstNumber / secondNumber;
                 break;
         }
@@ -244,8 +248,8 @@ class Question {
     }
 }
 
-public class Animations {
+class Animations {
     public static void slideDownAnim(View v) {
-        
+
     }
 }
