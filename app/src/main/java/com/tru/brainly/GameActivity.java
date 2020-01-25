@@ -316,7 +316,7 @@ class Animations {
     }
 
     public static void slideUpAnim(View v) {
-        slideUpAnim(v, 60f, 0.9f);
+        slideUpAnim(v, 80f, 0.8f);
     }
 
     public static void slideUpAnim(View v, float stiffness, float bounciness) {
