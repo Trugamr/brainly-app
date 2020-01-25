@@ -2,7 +2,6 @@ package com.tru.brainly;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.widget.ImageViewCompat;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
@@ -16,7 +15,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
         Animations.slideUpAnim(optionFour, 200f, 0.8f);
 
         Animations.slideDownAnim(overlayScreen);
+        overlayScreen.animate().setDuration(500).alpha(0f);
         game.startGame();
     }
 
@@ -113,7 +112,7 @@ class Game {
     int currentScore = 0;
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
-    long gameMaxTime = 10000L;
+    long gameMaxTime = 30000L;
 
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
@@ -163,6 +162,7 @@ class Game {
         Log.i("XD", "GAME_ENDED");
         // animations
         Animations.slideUpAnim(overlayScreen);
+        overlayScreen.animate().setDuration(500).alpha(1f);
         scoreTextView.animate().setDuration(300).alpha(0f);
         timerTextView.animate().setDuration(300).alpha(0f);
         questionTextView.animate().setDuration(300).alpha(0f);
@@ -176,7 +176,6 @@ class Game {
         currentScore = 0;
         numberOfQuestionsAsked = 0;
         gameRunning = false;
-        overlayScreen.setVisibility(View.VISIBLE);
     }
 
     public void nextQuestion() {
@@ -229,6 +228,7 @@ class Game {
         BackgroundColorSpan questionsStyle = new BackgroundColorSpan(Color.parseColor("#8fd3f4"));
 
         float percentage = (float) currentScore / (float) numberOfQuestionsAsked * 100f;
+        if(currentScore == 0) percentage = 0;
         SpannableString spanStringPercentage = new SpannableString(String.format(Locale.ENGLISH, " %.2f%% ", percentage));
         spanStringPercentage.setSpan(percentStyle, 0, spanStringPercentage.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         SpannableString spanStringScore = new SpannableString(String.format(Locale.ENGLISH, " %d ", currentScore));
@@ -349,8 +349,8 @@ class Animations {
     }
 
     public static void scaleUpDown(View v) {
-        final SpringAnimation scaleUpX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1.2f);
-        final SpringAnimation scaleUpY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1.2f);
+        final SpringAnimation scaleUpX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1.1f);
+        final SpringAnimation scaleUpY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1.1f);
         scaleUpX.getSpring().setStiffness(SpringForce.STIFFNESS_LOW).setDampingRatio(0.9f);
         scaleUpY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW).setDampingRatio(0.9f);
 
