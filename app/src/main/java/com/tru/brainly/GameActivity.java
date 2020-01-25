@@ -3,6 +3,7 @@ package com.tru.brainly;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
     Button optionOne, optionTwo, optionThree, optionFour;
     TextView timerTextView, scoreTextView, questionTextView;
 
@@ -47,7 +48,7 @@ class Game extends AppCompatActivity {
     int currentScore = 0;
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
-    long gameMaxTime = 15000L;
+    long gameMaxTime = 5000L;
 
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
@@ -90,6 +91,8 @@ class Game extends AppCompatActivity {
         currentScore = 0;
         numberOfQuestionsAsked = 0;
         gameRunning = false;
+        Intent intent = new Intent(this, EndGameActivity.class);
+        startActivity(intent);
     }
 
     public void nextQuestion() {
