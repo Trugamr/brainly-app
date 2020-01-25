@@ -29,7 +29,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:text="30s"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="0 / 0"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -181,6 +181,23 @@
             android:src="@drawable/brainly"
             app:layout_constraintEnd_toStartOf="@+id/brainlyText"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/finalScoresString"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="46dp"
+            android:layout_marginLeft="46dp"
+            android:layout_marginEnd="46dp"
+            android:layout_marginRight="46dp"
+            android:gravity="center"
+            android:text="45% of your answers were correct, you managed to get 4 out of 9 answers correctly :D"
+            android:textSize="22sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/brainlyText" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

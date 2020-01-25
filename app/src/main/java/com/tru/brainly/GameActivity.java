@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,12 +21,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
-import java.util.ResourceBundle;
 
 public class GameActivity extends AppCompatActivity {
     Button optionOne, optionTwo, optionThree, optionFour;
-    TextView timerTextView, scoreTextView, questionTextView;
+    TextView timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString;
     ConstraintLayout overlayScreen, mainScreen;
+    Button startButton;
     Game game;
 
     public void startGame(View v) {
@@ -42,15 +47,18 @@ public class GameActivity extends AppCompatActivity {
         optionThree = findViewById(R.id.optionThreeButton);
         optionFour = findViewById(R.id.optionFourButton);
         Button[] optionButtons = {optionOne, optionTwo, optionThree, optionFour};
+        startButton = findViewById(R.id.startButton);
 
         timerTextView = findViewById(R.id.timerTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
         questionTextView = findViewById(R.id.questionTextView);
-        TextView[] textViews = {timerTextView, scoreTextView, questionTextView};
+        brainlyText = findViewById(R.id.brainlyText);
+        finalScoresString = findViewById(R.id.finalScoresString);
+        TextView[] textViews = {timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString};
 
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
 
-        game = new Game(optionButtons, textViews, gameScreens);
+        game = new Game(optionButtons, textViews, gameScreens, startButton);
     }
 }
 
@@ -60,20 +68,22 @@ class Game {
     int currentScore = 0;
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
-    long gameMaxTime = 5000L;
+    long gameMaxTime = 15000L;
 
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
-    TextView timerTextView, scoreTextView, questionTextView;
+    TextView timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString;
     ConstraintLayout overlayScreen, mainScreen;
+    Button startButton;
 
     @SuppressLint("ClickableViewAccessibility")
-    Game(Button[] optionButtons, TextView[] textViews, ConstraintLayout[] gameScreens) {
+    Game(Button[] optionButtons, TextView[] textViews, ConstraintLayout[] gameScreens, Button startButton) {
         optionOne = optionButtons[0];
         optionTwo = optionButtons[1];
         optionThree = optionButtons[2];
         optionFour = optionButtons[3];
         this.optionButtons = optionButtons;
+        this.startButton = startButton;
 
         for(Button btn : optionButtons) {
             btn.setOnTouchListener(new View.OnTouchListener() {
@@ -89,6 +99,8 @@ class Game {
         timerTextView = textViews[0];
         scoreTextView = textViews[1];
         questionTextView = textViews[2];
+        brainlyText = textViews[3];
+        finalScoresString = textViews[4];
 
         this.overlayScreen = gameScreens[0];
         this.mainScreen = gameScreens[1];
@@ -103,6 +115,9 @@ class Game {
 
     public void endGame() {
         Log.i("XD", "GAME_ENDED");
+        finalScoresString.setVisibility(View.VISIBLE);
+        finalScoresString.setText(getColoredString());
+        startButton.setText("Restart");
         currentScore = 0;
         numberOfQuestionsAsked = 0;
         gameRunning = false;
@@ -136,7 +151,7 @@ class Game {
     }
 
     public CountDownTimer startCountDown() {
-        final CountDownTimer countDownTimer = new CountDownTimer(gameMaxTime + 100, 1000) {
+        final CountDownTimer countDownTimer = new CountDownTimer(gameMaxTime + 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timerTextView.setText(String.format("%02ds", millisUntilFinished / 1000));
@@ -148,6 +163,24 @@ class Game {
             }
         }.start();
         return countDownTimer;
+    }
+
+    public CharSequence getColoredString() {
+        BackgroundColorSpan percentStyle  = new BackgroundColorSpan(Color.parseColor("#84fab0"));
+        BackgroundColorSpan scoreStyle = new BackgroundColorSpan(Color.parseColor("#8fd3f4"));
+        BackgroundColorSpan questionsStyle = new BackgroundColorSpan(Color.parseColor("#8fd3f4"));
+
+        float percentage = (float) currentScore / (float) numberOfQuestionsAsked * 100f;
+        SpannableString spanStringPercentage = new SpannableString(String.format(Locale.ENGLISH, " %.2f%% ", percentage));
+        spanStringPercentage.setSpan(percentStyle, 0, spanStringPercentage.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        SpannableString spanStringScore = new SpannableString(String.format(Locale.ENGLISH, " %d ", currentScore));
+        spanStringScore.setSpan(scoreStyle, 0, spanStringScore.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        SpannableString spanStringQuestions = new SpannableString(String.format(Locale.ENGLISH, " %d ", numberOfQuestionsAsked));
+        spanStringQuestions.setSpan(questionsStyle, 0, spanStringQuestions.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        String string = String.format(Locale.ENGLISH, "%.0f%% of your answers were correct, you managed to answer %d out of %d answers correcty :D", percentage, currentScore, numberOfQuestionsAsked);
+//        SpannableString spanString = new SpannableString(string);
+        return TextUtils.concat(spanStringPercentage, " of your answers were correct, you managed to answer ", spanStringScore, " out of ", spanStringQuestions, " answers correctly ^_^");
     }
 }
 
@@ -208,5 +241,11 @@ class Question {
         options.add(correctOption);
         Collections.shuffle(options);
         return options;
+    }
+}
+
+public class Animations {
+    public static void slideDownAnim(View v) {
+        
     }
 }
