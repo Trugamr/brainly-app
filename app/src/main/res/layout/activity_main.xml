@@ -2,18 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".GameActivity">
 
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="152dp"
         android:lineSpacingExtra="30sp"
         android:text="24 - 23 = ?"
-        android:textSize="30sp"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@+id/gridView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,20 +54,24 @@
         android:layout_marginTop="100dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginBottom="132dp"
+        android:layout_marginBottom="64dp"
         app:columnCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/questionTextView"
-        app:rowCount="2">
+        app:rowCount="2"
+        app:useDefaultMargins="true">
 
         <Button
             android:id="@+id/optionOneButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/first_gradient"
             android:tag="1"
-            android:text="Button"
+            android:text="1"
+            android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_column="0"
             app:layout_columnWeight="1"
@@ -75,8 +82,11 @@
             android:id="@+id/optionTwoButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/second_gradient"
             android:tag="2"
-            android:text="Button"
+            android:text="32"
+            android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_column="1"
             app:layout_columnWeight="1"
@@ -87,8 +97,11 @@
             android:id="@+id/optionThreeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/third_gradient"
             android:tag="3"
-            android:text="Button"
+            android:text="- 51"
+            android:textColor="#FFFFFF"
             android:textSize="30sp"
             app:layout_column="0"
             app:layout_columnWeight="1"
@@ -99,13 +112,75 @@
             android:id="@+id/optionFourButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@drawable/fourth_gradient"
             android:tag="4"
-            android:text="Button"
-            android:textSize="30sp"
+            android:text="34"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
             app:layout_column="1"
             app:layout_columnWeight="1"
             app:layout_row="1"
             app:layout_rowWeight="1" />
+
     </androidx.gridlayout.widget.GridLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/overlayScreen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/start_background"
+            android:onClick="startGame"
+            android:text="Start"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/brainlyText"
+            android:layout_width="112dp"
+            android:layout_height="59dp"
+            android:layout_marginTop="172dp"
+            android:gravity="center"
+            android:text="brainly"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.58"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/brainlyIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="172dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/brainly"
+            app:layout_constraintEnd_toStartOf="@+id/brainlyText"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,9 @@
 package com.tru.brainly;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -16,15 +16,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Random;
+import java.util.ResourceBundle;
 
 public class GameActivity extends AppCompatActivity {
     Button optionOne, optionTwo, optionThree, optionFour;
     TextView timerTextView, scoreTextView, questionTextView;
+    ConstraintLayout overlayScreen, mainScreen;
+    Game game;
+
+    public void startGame(View v) {
+        overlayScreen.setVisibility(View.INVISIBLE);
+        game.startGame();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        overlayScreen = findViewById(R.id.overlayScreen);
+        mainScreen = findViewById(R.id.mainScreen);
 
         optionOne = findViewById(R.id.optionOneButton);
         optionTwo = findViewById(R.id.optionTwoButton);
@@ -37,12 +48,13 @@ public class GameActivity extends AppCompatActivity {
         questionTextView = findViewById(R.id.questionTextView);
         TextView[] textViews = {timerTextView, scoreTextView, questionTextView};
 
-        Game game = new Game(optionButtons, textViews);
-        game.startGame();
+        ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
+
+        game = new Game(optionButtons, textViews, gameScreens);
     }
 }
 
-class Game extends AppCompatActivity {
+class Game {
     int minNumber = 1;
     int maxNumber = 31;
     int currentScore = 0;
@@ -53,9 +65,10 @@ class Game extends AppCompatActivity {
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
     TextView timerTextView, scoreTextView, questionTextView;
+    ConstraintLayout overlayScreen, mainScreen;
 
     @SuppressLint("ClickableViewAccessibility")
-    Game(Button[] optionButtons, TextView[] textViews) {
+    Game(Button[] optionButtons, TextView[] textViews, ConstraintLayout[] gameScreens) {
         optionOne = optionButtons[0];
         optionTwo = optionButtons[1];
         optionThree = optionButtons[2];
@@ -76,6 +89,9 @@ class Game extends AppCompatActivity {
         timerTextView = textViews[0];
         scoreTextView = textViews[1];
         questionTextView = textViews[2];
+
+        this.overlayScreen = gameScreens[0];
+        this.mainScreen = gameScreens[1];
     }
 
     public void startGame() {
@@ -87,12 +103,10 @@ class Game extends AppCompatActivity {
 
     public void endGame() {
         Log.i("XD", "GAME_ENDED");
-        timerTextView.setText("00s");
         currentScore = 0;
         numberOfQuestionsAsked = 0;
         gameRunning = false;
-        Intent intent = new Intent(this, EndGameActivity.class);
-        startActivity(intent);
+        overlayScreen.setVisibility(View.VISIBLE);
     }
 
     public void nextQuestion() {
