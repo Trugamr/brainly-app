@@ -2,8 +2,13 @@ package com.tru.brainly;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.ImageViewCompat;
+import androidx.dynamicanimation.animation.DynamicAnimation;
+import androidx.dynamicanimation.animation.SpringAnimation;
+import androidx.dynamicanimation.animation.SpringForce;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,10 +16,12 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -30,7 +37,29 @@ public class GameActivity extends AppCompatActivity {
     Game game;
 
     public void startGame(View v) {
-        overlayScreen.setVisibility(View.INVISIBLE);
+        //  overlayScreen.setVisibility(View.INVISIBLE);
+        // animations, find a better place to place these
+        optionOne.setAlpha(1f);
+        optionTwo.setAlpha(1f);
+        optionThree.setAlpha(1f);
+        optionFour.setAlpha(1f);
+        scoreTextView.setAlpha(0f);
+        timerTextView.setAlpha(0f);
+        questionTextView.setAlpha(0f);
+        scoreTextView.animate().setDuration(500).alpha(1f);
+        timerTextView.animate().setDuration(500).alpha(1f);
+        questionTextView.animate().setDuration(500).alpha(1f);
+        // button showing animations
+        optionOne.setTranslationY(100f);
+        optionTwo.setTranslationY(400f);
+        optionThree.setTranslationY(600f);
+        optionFour.setTranslationY(800f);
+        Animations.slideUpAnim(optionOne, 50f, 0.8f);
+        Animations.slideUpAnim(optionTwo, 100f, 0.8f);
+        Animations.slideUpAnim(optionThree, 150f, 0.8f);
+        Animations.slideUpAnim(optionFour, 200f, 0.8f);
+
+        Animations.slideDownAnim(overlayScreen);
         game.startGame();
     }
 
@@ -41,6 +70,8 @@ public class GameActivity extends AppCompatActivity {
 
         overlayScreen = findViewById(R.id.overlayScreen);
         mainScreen = findViewById(R.id.mainScreen);
+
+        ImageView brainlyIcon = findViewById(R.id.brainlyIcon);
 
         optionOne = findViewById(R.id.optionOneButton);
         optionTwo = findViewById(R.id.optionTwoButton);
@@ -56,19 +87,33 @@ public class GameActivity extends AppCompatActivity {
         finalScoresString = findViewById(R.id.finalScoresString);
         TextView[] textViews = {timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString};
 
+
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
 
         game = new Game(optionButtons, textViews, gameScreens, startButton);
+
+        // animations
+        brainlyText.setScaleX(0f);
+        brainlyText.setScaleY(0f);
+        Animations.scaleUp(brainlyText, 50f, 0.7f);
+        brainlyIcon.setScaleX(0f);
+        brainlyIcon.setScaleY(0f);
+        Animations.scaleUp(brainlyIcon, 50f, 0.7f);
+        startButton.setScaleX(0f);
+        startButton.setScaleY(0f);
+        startButton.setTranslationY(300f);
+        Animations.slideUpAnim(startButton);
+        Animations.scaleUp(startButton, 50f, 0.7f);
     }
 }
 
 class Game {
     int minNumber = 1;
-    int maxNumber = 31;
+    int maxNumber = 11;
     int currentScore = 0;
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
-    long gameMaxTime = 15000L;
+    long gameMaxTime = 10000L;
 
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
@@ -89,8 +134,9 @@ class Game {
             btn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    if(event.getAction() == MotionEvent.ACTION_DOWN)
+                    if(event.getAction() == MotionEvent.ACTION_DOWN) {
                         chooseOption(v);
+                    }
                     return false;
                 }
             });
@@ -115,6 +161,15 @@ class Game {
 
     public void endGame() {
         Log.i("XD", "GAME_ENDED");
+        // animations
+        Animations.slideUpAnim(overlayScreen);
+        scoreTextView.animate().setDuration(300).alpha(0f);
+        timerTextView.animate().setDuration(300).alpha(0f);
+        questionTextView.animate().setDuration(300).alpha(0f);
+        for(Button optionButton : optionButtons) {
+            optionButton.animate().setDuration(300).alpha(0);
+        }
+
         finalScoresString.setVisibility(View.VISIBLE);
         finalScoresString.setText(getColoredString());
         startButton.setText("Restart");
@@ -143,7 +198,10 @@ class Game {
         boolean wasCorrect = Boolean.parseBoolean(v.getTag().toString());
         Log.i("XD", "OPTION: " + wasCorrect);
         if(wasCorrect) {
+            Animations.scaleUpDown(v);
             currentScore += 1;
+        } else {
+            Animations.scaleDownUp(v);
         }
         numberOfQuestionsAsked += 1;
         scoreTextView.setText(String.format(Locale.ENGLISH, "%d / %d", currentScore, numberOfQuestionsAsked));
@@ -250,6 +308,75 @@ class Question {
 
 class Animations {
     public static void slideDownAnim(View v) {
+        int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        SpringAnimation slideDownY = new SpringAnimation(v, DynamicAnimation.TRANSLATION_Y, screenHeight);
+        slideDownY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW).setDampingRatio(0.9f);
+        slideDownY.start();
+    }
 
+    public static void slideUpAnim(View v) {
+        slideUpAnim(v, 100f, 0.9f);
+    }
+
+    public static void slideUpAnim(View v, float stiffness, float bounciness) {
+        SpringAnimation slideUpY = new SpringAnimation(v, DynamicAnimation.TRANSLATION_Y, 0f);
+        slideUpY.getSpring().setStiffness(stiffness).setDampingRatio(bounciness);
+        slideUpY.start();
+    }
+
+    public static void scaleDownUp(View v) {
+        final SpringAnimation scaleDownX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 0.8f);
+        SpringAnimation scaleDownY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 0.8f);
+        scaleDownX.getSpring().setStiffness(SpringForce.STIFFNESS_HIGH).setDampingRatio(0.9f);
+        scaleDownY.getSpring().setStiffness(SpringForce.STIFFNESS_HIGH).setDampingRatio(0.9f);
+
+        scaleDownX.start();
+        scaleDownY.start();
+
+        final SpringAnimation scaleUpX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1f);
+        final SpringAnimation scaleUpY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1f);
+        scaleUpX.getSpring().setStiffness(600f).setDampingRatio(0.55f);
+        scaleUpY.getSpring().setStiffness(600f).setDampingRatio(0.55f);
+
+        scaleDownX.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
+            @Override
+            public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value, float velocity) {
+                Log.i("ANIM", animation.toString() + ", " + canceled + ", " + value + ", " + velocity);
+                scaleUpX.start();
+                scaleUpY.start();
+            }
+        });
+    }
+
+    public static void scaleUpDown(View v) {
+        final SpringAnimation scaleUpX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1.2f);
+        final SpringAnimation scaleUpY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1.2f);
+        scaleUpX.getSpring().setStiffness(SpringForce.STIFFNESS_LOW).setDampingRatio(0.9f);
+        scaleUpY.getSpring().setStiffness(SpringForce.STIFFNESS_LOW).setDampingRatio(0.9f);
+
+        scaleUpX.start();
+        scaleUpY.start();
+
+        final SpringAnimation scaleDownX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1f);
+        final SpringAnimation scaleDownY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1f);
+        scaleUpX.getSpring().setStiffness(1300f).setDampingRatio(0.55f);
+        scaleUpY.getSpring().setStiffness(1300f).setDampingRatio(0.55f);
+
+        scaleUpX.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
+            @Override
+            public void onAnimationEnd(DynamicAnimation animation, boolean canceled, float value, float velocity) {
+                scaleDownX.start();
+                scaleDownY.start();
+            }
+        });
+    }
+
+    public static void scaleUp(View v, float stiffness, float bounciness) {
+        final SpringAnimation scaleUpX = new SpringAnimation(v, DynamicAnimation.SCALE_X, 1f);
+        final SpringAnimation scaleUpY = new SpringAnimation(v, DynamicAnimation.SCALE_Y, 1f);
+        scaleUpX.getSpring().setStiffness(stiffness).setDampingRatio(bounciness);
+        scaleUpY.getSpring().setStiffness(stiffness).setDampingRatio(bounciness);
+        scaleUpX.start();
+        scaleUpY.start();
     }
 }
