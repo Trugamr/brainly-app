@@ -108,7 +108,7 @@ public class GameActivity extends AppCompatActivity {
 
 class Game {
     int minNumber = 1;
-    int maxNumber = 11;
+    int maxNumber = 20;
     int currentScore = 0;
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
