@@ -104,6 +104,7 @@ public class GameActivity extends AppCompatActivity {
         startButton.setTranslationY(300f);
         Animations.slideUpAnim(startButton);
         Animations.scaleUp(startButton, 50f, 0.7f);
+
     }
 }
 
@@ -230,16 +231,13 @@ class Game {
 
         float percentage = (float) currentScore / (float) numberOfQuestionsAsked * 100f;
         if(currentScore == 0) percentage = 0;
-        SpannableString spanStringPercentage = new SpannableString(String.format(Locale.ENGLISH, " %.2f%% ", percentage));
+        SpannableString spanStringPercentage = new SpannableString(String.format(Locale.ENGLISH, "\u00A0%.2f%%\u00A0", percentage));
         spanStringPercentage.setSpan(percentStyle, 0, spanStringPercentage.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        SpannableString spanStringScore = new SpannableString(String.format(Locale.ENGLISH, " %d ", currentScore));
+        SpannableString spanStringScore = new SpannableString(String.format(Locale.ENGLISH, "\u00A0%d\u00A0", currentScore));
         spanStringScore.setSpan(scoreStyle, 0, spanStringScore.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        SpannableString spanStringQuestions = new SpannableString(String.format(Locale.ENGLISH, " %d ", numberOfQuestionsAsked));
+        SpannableString spanStringQuestions = new SpannableString(String.format(Locale.ENGLISH, "\u00A0%d\u00A0", numberOfQuestionsAsked));
         spanStringQuestions.setSpan(questionsStyle, 0, spanStringQuestions.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-
-        String string = String.format(Locale.ENGLISH, "%.0f%% of your answers were correct, you managed to answer %d out of %d answers correcty :D", percentage, currentScore, numberOfQuestionsAsked);
-//        SpannableString spanString = new SpannableString(string);
-        return TextUtils.concat(spanStringPercentage, " of your answers were correct, you managed to answer ", spanStringScore, " out of ", spanStringQuestions, " answers correctly ^_^");
+        return TextUtils.concat(spanStringPercentage, " of your answers were correct, you managed to answer ", spanStringScore, " out of ", spanStringQuestions, " questions correctly ^_^");
     }
 }
 
