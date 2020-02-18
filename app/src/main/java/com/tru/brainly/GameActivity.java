@@ -54,7 +54,7 @@ public class GameActivity extends AppCompatActivity {
         Animations.slideUpAnim(optionThree, 150f, 0.8f);
         Animations.slideUpAnim(optionFour, 200f, 0.8f);
 
-        Animations.slideDownAnim(overlayScreen);
+        Animations.slideDownAnim((View) overlayScreen);
 //        overlayScreen.animate().setDuration(500).alpha(0f);
         game.startGame();
     }
@@ -293,11 +293,16 @@ class Question {
             maxNumber = 10;
         ArrayList<Integer> list = new ArrayList<>();
         for (int i=0; i<maxNumber; i++) {
-            list.add(new Integer(i));
+            // correct option won't be repeated
+            if(i == correctOption) list.add(maxNumber);
+            else list.add(i);
         }
         Collections.shuffle(list);
         for (int i=0; i < numOfOptions; i++) {
-            options.add(list.get(i));
+            int option = list.get(i);
+            // probability of showing -ve options if answer is negative
+            if((new Random().nextBoolean()) && correctOption < 0 && correctOption != (-1 * option)) option *= -1;
+            options.add(option);
         }
         options.add(correctOption);
         Collections.shuffle(options);
