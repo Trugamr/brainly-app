@@ -1,5 +1,6 @@
 package com.tru.brainly;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
@@ -7,6 +8,10 @@ import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +38,9 @@ public class GameActivity extends AppCompatActivity {
     ConstraintLayout overlayScreen, mainScreen;
     Button startButton;
     Game game;
+    SharedPreferences sharedPreferences;
+    ImageView settingsImageView;
+    boolean animatedOnStart = false;
 
     public void startGame(View v) {
         //  overlayScreen.setVisibility(View.INVISIBLE);
@@ -68,6 +76,7 @@ public class GameActivity extends AppCompatActivity {
         mainScreen = findViewById(R.id.mainScreen);
 
         ImageView brainlyIcon = findViewById(R.id.brainlyIcon);
+        settingsImageView = findViewById(R.id.settingsIcon);
 
         optionOne = findViewById(R.id.optionOneButton);
         optionTwo = findViewById(R.id.optionTwoButton);
@@ -83,28 +92,67 @@ public class GameActivity extends AppCompatActivity {
         finalScoresString = findViewById(R.id.finalScoresString);
         TextView[] textViews = {timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString};
 
-
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
 
         game = new Game(optionButtons, textViews, gameScreens, startButton);
+
+        loadSettings();
 
         scoreTextView.setAlpha(0f);
         timerTextView.setAlpha(0f);
         questionTextView.setAlpha(0f);
 
         // animations
-        brainlyText.setScaleX(0f);
-        brainlyText.setScaleY(0f);
-        Animations.scaleUp(brainlyText, 50f, 0.7f);
-        brainlyIcon.setScaleX(0f);
-        brainlyIcon.setScaleY(0f);
-        Animations.scaleUp(brainlyIcon, 50f, 0.7f);
-        startButton.setScaleX(0f);
-        startButton.setScaleY(0f);
-        startButton.setTranslationY(300f);
-        Animations.slideUpAnim(startButton);
-        Animations.scaleUp(startButton, 50f, 0.7f);
+        if(!animatedOnStart) {
+            brainlyText.setScaleX(0f);
+            brainlyText.setScaleY(0f);
+            Animations.scaleUp(brainlyText, 50f, 0.7f);
+            brainlyIcon.setScaleX(0f);
+            brainlyIcon.setScaleY(0f);
+            Animations.scaleUp(brainlyIcon, 50f, 0.7f);
+            startButton.setScaleX(0f);
+            startButton.setScaleY(0f);
+            startButton.setTranslationY(300f);
+            Animations.slideUpAnim(startButton);
+            Animations.scaleUp(startButton, 50f, 0.7f);
+        }
+        animatedOnStart = true;
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // handling android back button
+        if(resultCode == Activity.RESULT_CANCELED) return;
+        game.minNumber = data.getIntExtra("minNumber", game.minNumber);
+        game.maxNumber = data.getIntExtra("maxNumber", game.maxNumber);
+        game.gameMaxTime = data.getLongExtra("gameMaxTime", game.gameMaxTime);
+        game.currentPreset = data.getIntExtra("currentPreset", game.currentPreset);
+        saveSettings();
+    }
+
+    public void saveSettings() {
+        sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        sharedPreferences
+                .edit()
+                .putInt("minNumber", game.minNumber)
+                .putInt("maxNumber", game.maxNumber)
+                .putLong("gameMaxTime", game.gameMaxTime)
+                .putInt("currentPreset", game.currentPreset)
+                .apply();
+    }
+
+    public void loadSettings() {
+        sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        game.minNumber = sharedPreferences.getInt("minNumber", 1);
+        game.maxNumber = sharedPreferences.getInt("maxNumber", 20);
+        game.gameMaxTime = sharedPreferences.getLong("gameMaxTime", 30000L);
+        game.currentPreset = sharedPreferences.getInt("currentPreset", 1);
+    }
+
+    public void openSettingsActivity(View view) {
+        Intent settingsIntent = new Intent(this, SettingsActivity.class);
+        startActivityForResult(settingsIntent, 1);
     }
 }
 
@@ -115,6 +163,7 @@ class Game {
     int numberOfQuestionsAsked = 0;
     boolean gameRunning = false;
     long gameMaxTime = 30000L;
+    int currentPreset = 1;
 
     Button optionOne, optionTwo, optionThree, optionFour;
     Button[] optionButtons;
