@@ -137,14 +137,38 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
+        <LinearLayout
+            android:id="@+id/logoGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="172dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/brainlyIcon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/brainly" />
+
+            <TextView
+                android:id="@+id/brainlyText"
+                android:layout_width="112dp"
+                android:layout_height="59dp"
+                android:gravity="center"
+                android:text="brainly"
+                android:textSize="36sp" />
+        </LinearLayout>
+
         <Button
             android:id="@+id/startButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
-            android:layout_marginLeft="36dp"
             android:layout_marginEnd="36dp"
-            android:layout_marginRight="36dp"
             android:layout_marginBottom="36dp"
             android:background="@drawable/start_background"
             android:onClick="startGame"
@@ -159,37 +183,11 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <TextView
-            android:id="@+id/brainlyText"
-            android:layout_width="112dp"
-            android:layout_height="59dp"
-            android:layout_marginTop="172dp"
-            android:gravity="center"
-            android:text="brainly"
-            android:textSize="36sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.58"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/brainlyIcon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="172dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/brainly"
-            app:layout_constraintEnd_toStartOf="@+id/brainlyText"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/finalScoresString"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="46dp"
-            android:layout_marginLeft="46dp"
             android:layout_marginEnd="46dp"
-            android:layout_marginRight="46dp"
             android:gravity="center"
             android:text="45% of your answers were correct, you managed to get 4 out of 9 answers correctly :D"
             android:textSize="22sp"
@@ -197,7 +195,7 @@
             app:layout_constraintBottom_toTopOf="@+id/startButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/brainlyText" />
+            app:layout_constraintTop_toBottomOf="@+id/logoGroup" />
 
         <ImageView
             android:id="@+id/settingsIcon"

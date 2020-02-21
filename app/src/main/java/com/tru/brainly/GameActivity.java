@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class GameActivity extends AppCompatActivity {
         overlayScreen = findViewById(R.id.overlayScreen);
         mainScreen = findViewById(R.id.mainScreen);
 
-        ImageView brainlyIcon = findViewById(R.id.brainlyIcon);
+        LinearLayout logoGroup = findViewById(R.id.logoGroup);
         settingsImageView = findViewById(R.id.settingsIcon);
 
         optionOne = findViewById(R.id.optionOneButton);
@@ -104,12 +105,9 @@ public class GameActivity extends AppCompatActivity {
 
         // animations
         if(!animatedOnStart) {
-            brainlyText.setScaleX(0f);
-            brainlyText.setScaleY(0f);
-            Animations.scaleUp(brainlyText, 50f, 0.7f);
-            brainlyIcon.setScaleX(0f);
-            brainlyIcon.setScaleY(0f);
-            Animations.scaleUp(brainlyIcon, 50f, 0.7f);
+            logoGroup.setScaleX(0f);
+            logoGroup.setScaleY(0f);
+            Animations.scaleUp(logoGroup, 50f, 0.7f);
             startButton.setScaleX(0f);
             startButton.setScaleY(0f);
             startButton.setTranslationY(300f);
