@@ -37,7 +37,7 @@ import java.util.Locale;
 import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
-    Button optionOne, optionTwo, optionThree, optionFour;
+    Button optionOne, optionTwo, optionThree, optionFour, optionFive, optionSix;
     TextView timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString;
     ConstraintLayout overlayScreen, mainScreen;
     Button startButton;
@@ -67,6 +67,20 @@ public class GameActivity extends AppCompatActivity {
         Animations.slideUpAnim(optionThree, 150f, 0.8f);
         Animations.slideUpAnim(optionFour, 200f, 0.8f);
 
+        if(Game.numberOfOptions == 6) {
+            optionFive.setVisibility(View.VISIBLE);
+            optionSix.setVisibility(View.VISIBLE);
+            optionFive.setTranslationY(600f);
+            optionSix.setTranslationY(800f);
+            optionFive.setAlpha(1f);
+            optionSix.setAlpha(1f);
+            Animations.slideUpAnim(optionFive, 250f, 0.8f);
+            Animations.slideUpAnim(optionSix, 300f, 0.8f);
+        } else {
+            optionFive.setVisibility(View.GONE);
+            optionSix.setVisibility(View.GONE);
+        }
+
         Animations.slideDownAnim((View) overlayScreen);
 //        overlayScreen.animate().setDuration(500).alpha(0f);
         game.startGame();
@@ -87,9 +101,10 @@ public class GameActivity extends AppCompatActivity {
         optionTwo = findViewById(R.id.optionTwoButton);
         optionThree = findViewById(R.id.optionThreeButton);
         optionFour = findViewById(R.id.optionFourButton);
-        Button[] optionButtons = {optionOne, optionTwo, optionThree, optionFour};
+        optionFive = findViewById(R.id.optionFiveButton);
+        optionSix = findViewById(R.id.optionSixButton);
+        Button[] optionButtons = {optionOne, optionTwo, optionThree, optionFour, optionFive, optionSix};
         startButton = findViewById(R.id.startButton);
-
         timerTextView = findViewById(R.id.timerTextView);
         scoreTextView = findViewById(R.id.scoreTextView);
         questionTextView = findViewById(R.id.questionTextView);
@@ -98,7 +113,6 @@ public class GameActivity extends AppCompatActivity {
         TextView[] textViews = {timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString};
 
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
-
 
         // end game alert dialog
         TextView alertTitle = new TextView(this);
@@ -151,6 +165,7 @@ public class GameActivity extends AppCompatActivity {
         game.gameMaxTime = data.getLongExtra("gameMaxTime", game.gameMaxTime);
         game.currentPreset = data.getIntExtra("currentPreset", game.currentPreset);
         saveSettings();
+        refreshOptions();
     }
 
     public void saveSettings() {
@@ -170,6 +185,13 @@ public class GameActivity extends AppCompatActivity {
         game.maxNumber = sharedPreferences.getInt("maxNumber", 20);
         game.gameMaxTime = sharedPreferences.getLong("gameMaxTime", 30000L);
         game.currentPreset = sharedPreferences.getInt("currentPreset", 1);
+        refreshOptions();
+    }
+
+    public void refreshOptions() {
+        // number of options based on preset
+        if(game.currentPreset == 3) Game.numberOfOptions = 6;
+        else Game.numberOfOptions = 4;
     }
 
     public void openSettingsActivity(View view) {
@@ -196,8 +218,9 @@ class Game {
     boolean gameRunning = false;
     long gameMaxTime = 30000L;
     int currentPreset = 1;
+    static int numberOfOptions = 4;
 
-    Button optionOne, optionTwo, optionThree, optionFour;
+    Button optionOne, optionTwo, optionThree, optionFour, optionFive, optionSix;
     Button[] optionButtons;
     TextView timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString;
     ConstraintLayout overlayScreen, mainScreen;
@@ -211,6 +234,8 @@ class Game {
         optionTwo = optionButtons[1];
         optionThree = optionButtons[2];
         optionFour = optionButtons[3];
+        optionFive = optionButtons[4];
+        optionSix = optionButtons[5];
         this.optionButtons = optionButtons;
         this.startButton = startButton;
         this.gameEndDialog = alertDialog;
@@ -279,7 +304,7 @@ class Game {
         Question question = Question.generateChallenge(minNumber, maxNumber);
         questionTextView.setText(String.format(Locale.ENGLISH, "%s = ?", question.equation));
         ArrayList<Integer> options = question.options;
-        for(int i = 0; i < options.size(); i++) {
+        for(int i = 0; i < numberOfOptions; i++) {
             optionButtons[i].setText(String.format(Locale.ENGLISH, "%d", options.get(i)));
             if(options.get(i) == question.answer)
                 optionButtons[i].setTag(true);
@@ -377,7 +402,7 @@ class Question {
                 result = firstNumber / secondNumber;
                 break;
         }
-        return new Question(equation, result, generateOptions(result + 20, 3, result));
+        return new Question(equation, result, generateOptions(result + 20, Game.numberOfOptions, result));
     }
 
     private static ArrayList<Integer> generateOptions(int maxNumber, int numOfOptions, int correctOption) {
@@ -392,7 +417,7 @@ class Question {
             else list.add(i);
         }
         Collections.shuffle(list);
-        for (int i=0; i < numOfOptions; i++) {
+        for (int i=0; i < numOfOptions - 1; i++) {
             int option = list.get(i);
             // probability of showing -ve options if answer is negative
             if((new Random().nextBoolean()) && correctOption < 0 && correctOption != (-1 * option)) option *= -1;
