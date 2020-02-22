@@ -209,10 +209,18 @@ class Game {
 
     public void endGame() {
         Log.i("XD", "GAME_ENDED");
+        currentScore = 0;
+        numberOfQuestionsAsked = 0;
+        gameRunning = false;
         // animations
         Animations.slideUpAnim(overlayScreen);
 //        overlayScreen.animate().setDuration(500).alpha(1f);
-        scoreTextView.animate().setDuration(300).alpha(0f);
+        scoreTextView.animate().setDuration(300).alpha(0f).withEndAction(new Runnable() {
+            @Override
+            public void run() {
+                scoreTextView.setText(String.format(Locale.ENGLISH, "%d / %d", currentScore, numberOfQuestionsAsked));
+            }
+        });
         timerTextView.animate().setDuration(300).alpha(0f);
         questionTextView.animate().setDuration(300).alpha(0f);
         for(Button optionButton : optionButtons) {
@@ -222,9 +230,6 @@ class Game {
         finalScoresString.setVisibility(View.VISIBLE);
         finalScoresString.setText(getColoredString());
         startButton.setText("Restart");
-        currentScore = 0;
-        numberOfQuestionsAsked = 0;
-        gameRunning = false;
     }
 
     public void nextQuestion() {
