@@ -9,7 +9,9 @@ import androidx.dynamicanimation.animation.SpringForce;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -21,6 +23,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ImageView settingsImageView;
     boolean animatedOnStart = false;
+    AlertDialog alertDialog;
 
     public void startGame(View v) {
         //  overlayScreen.setVisibility(View.INVISIBLE);
@@ -95,7 +99,27 @@ public class GameActivity extends AppCompatActivity {
 
         ConstraintLayout[] gameScreens = {overlayScreen, mainScreen};
 
-        game = new Game(optionButtons, textViews, gameScreens, startButton);
+
+        // end game alert dialog
+        TextView alertTitle = new TextView(this);
+        alertTitle.setText("brainly");
+        alertTitle.setTextSize(22f);
+        alertTitle.setTextColor(Color.parseColor("#3e3e3e"));
+        alertTitle.setPadding(60, 40, 60, 30);
+        alertTitle.setBackgroundResource(R.drawable.alert_title_background);
+        alertDialog = new AlertDialog.Builder(this, R.style.GameEndAlertDialog)
+                .setCustomTitle(alertTitle)
+                .setMessage("Do you want to end the game ?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        game.endGame();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .create();
+
+        game = new Game(optionButtons, textViews, gameScreens, startButton, alertDialog);
 
         loadSettings();
 
@@ -152,6 +176,16 @@ public class GameActivity extends AppCompatActivity {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
         startActivityForResult(settingsIntent, 1);
     }
+
+    public void showEndGameDialog() {
+        alertDialog.show();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && game.gameRunning) showEndGameDialog();
+        return super.onKeyDown(keyCode, event);
+    }
 }
 
 class Game {
@@ -168,15 +202,18 @@ class Game {
     TextView timerTextView, scoreTextView, questionTextView, brainlyText, finalScoresString;
     ConstraintLayout overlayScreen, mainScreen;
     Button startButton;
+    CountDownTimer gameCountDownTimer;
+    AlertDialog gameEndDialog;
 
     @SuppressLint("ClickableViewAccessibility")
-    Game(Button[] optionButtons, TextView[] textViews, ConstraintLayout[] gameScreens, Button startButton) {
+    Game(Button[] optionButtons, TextView[] textViews, ConstraintLayout[] gameScreens, Button startButton, AlertDialog alertDialog) {
         optionOne = optionButtons[0];
         optionTwo = optionButtons[1];
         optionThree = optionButtons[2];
         optionFour = optionButtons[3];
         this.optionButtons = optionButtons;
         this.startButton = startButton;
+        this.gameEndDialog = alertDialog;
 
         for(Button btn : optionButtons) {
             btn.setOnTouchListener(new View.OnTouchListener() {
@@ -203,18 +240,20 @@ class Game {
     public void startGame() {
         Log.i("XD", "GAME_STARTED");
         gameRunning = true;
-        CountDownTimer countDownTimer = startCountDown();
+        gameCountDownTimer = startCountDown();
         nextQuestion();
     }
 
     public void endGame() {
         Log.i("XD", "GAME_ENDED");
+        finalScoresString.setVisibility(View.VISIBLE);
+        finalScoresString.setText(getColoredString());
         currentScore = 0;
         numberOfQuestionsAsked = 0;
         gameRunning = false;
         // animations
         Animations.slideUpAnim(overlayScreen);
-//        overlayScreen.animate().setDuration(500).alpha(1f);
+        // overlayScreen.animate().setDuration(500).alpha(1f);
         scoreTextView.animate().setDuration(300).alpha(0f).withEndAction(new Runnable() {
             @Override
             public void run() {
@@ -227,8 +266,11 @@ class Game {
             optionButton.animate().setDuration(300).alpha(0);
         }
 
-        finalScoresString.setVisibility(View.VISIBLE);
-        finalScoresString.setText(getColoredString());
+        try {
+            gameCountDownTimer.cancel();
+            gameEndDialog.dismiss();
+        } catch(Exception e) { e.printStackTrace(); }
+
         startButton.setText("Restart");
     }
 

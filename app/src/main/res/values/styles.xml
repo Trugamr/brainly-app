@@ -9,4 +9,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Alert Dialog -->
+    <style name="GameEndAlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/alert_dialog</item>
+        <item name="android:textColorPrimary">#6e6e6e</item>
+        <item name="android:colorAccent">#45c3ff</item>
+    </style>
+
 </resources>
