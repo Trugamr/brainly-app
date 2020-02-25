@@ -408,7 +408,7 @@ class Question {
     private static ArrayList<Integer> generateOptions(int maxNumber, int numOfOptions, int correctOption) {
         maxNumber = Math.abs(maxNumber);
         ArrayList<Integer> options = new ArrayList<>();
-        if (maxNumber <= 3)
+        if (maxNumber <= 6)
             maxNumber = 10;
         ArrayList<Integer> list = new ArrayList<>();
         for (int i=0; i<maxNumber; i++) {
@@ -418,7 +418,7 @@ class Question {
         }
         Collections.shuffle(list);
         for (int i=0; i < numOfOptions - 1; i++) {
-            int option = list.get(i);
+            int option = list.get(i);;
             // probability of showing -ve options if answer is negative
             if((new Random().nextBoolean()) && correctOption < 0 && correctOption != (-1 * option)) option *= -1;
             options.add(option);
