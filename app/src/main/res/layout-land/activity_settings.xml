@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".SettingsActivity">
+
+    <Button
+        android:id="@+id/applySettingsButton"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/start_background"
+        android:onClick="applySettings"
+        android:text="Save Settings"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:onClick="openGameActivity"
+        android:padding="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
+
+    <LinearLayout
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="100dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="difficulty"
+            android:textSize="26sp" />
+
+        <RadioGroup
+            android:id="@+id/difficultyRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@drawable/toggle_group_bg"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/toggleEasy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="easy"
+                android:textAllCaps="false"
+                android:textOff="easy"
+                android:textOn="easy" />
+
+            <ToggleButton
+                android:id="@+id/toggleMedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="medium"
+                android:textAllCaps="false"
+                android:textOff="medium"
+                android:textOn="medium" />
+
+            <ToggleButton
+                android:id="@+id/toggleHard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="hard"
+                android:textAllCaps="false"
+                android:textOff="hard"
+                android:textOn="hard" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="round time"
+            android:textSize="26sp" />
+
+        <RadioGroup
+            android:id="@+id/timeRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_group_bg"
+            android:orientation="horizontal">
+
+            <ToggleButton
+                android:id="@+id/toggle30"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="30s"
+                android:textAllCaps="false"
+                android:textOff="30s"
+                android:textOn="30s" />
+
+            <ToggleButton
+                android:id="@+id/toggle45"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="45s"
+                android:textAllCaps="false"
+                android:textOff="45s"
+                android:textOn="45s" />
+
+            <ToggleButton
+                android:id="@+id/toggle60"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/check"
+                android:onClick="onToggle"
+                android:text="60s"
+                android:textAllCaps="false"
+                android:textOff="60s"
+                android:textOn="60s" />
+        </RadioGroup>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
